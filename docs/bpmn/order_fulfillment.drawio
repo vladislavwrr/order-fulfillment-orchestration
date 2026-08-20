@@ -1,0 +1,191 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram name="Order Fulfillment BPMN 2.0" id="OrderFulfillmentBPMN">
+    <mxGraphModel dx="1696" dy="787" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pool_wms" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontStyle=1;align=center;verticalAlign=middle;" value="Склад (WMS)" vertex="1">
+          <mxGeometry height="60" width="340" x="200" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_payment" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontStyle=1;align=center;verticalAlign=middle;" value="Платежный шлюз" vertex="1">
+          <mxGeometry height="60" width="340" x="600" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_delivery" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontStyle=1;align=center;verticalAlign=middle;" value="Служба доставки" vertex="1">
+          <mxGeometry height="60" width="400" x="1100" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_orchestrator" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontStyle=1;fontSize=13;" value="Order Orchestrator (Оркестратор заказов)" vertex="1">
+          <mxGeometry height="480" width="1680" x="40" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="start_order" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=11;fontStyle=1;" value="Заказ&#xa;оформлен" vertex="1">
+          <mxGeometry height="40" width="40" x="50" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="task_reserve" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;fontStyle=1;" value="⚙️ Зарезервировать&#xa;товар в WMS" vertex="1">
+          <mxGeometry height="70" width="130" x="130" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="b_comp_reserve" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;" value="⏪" vertex="1">
+          <mxGeometry height="25" width="25" x="180" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="task_comp_release" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#f8cecc;strokeColor=#b85450;dashed=1;fontSize=10;" value="Снять бронь&#xa;остатков (WMS)" vertex="1">
+          <mxGeometry height="50" width="120" x="135" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="task_init_pay" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;fontStyle=1;" value="⚙️ Инициировать&#xa;платеж (Hold)" vertex="1">
+          <mxGeometry height="70" width="130" x="300" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="task_wait_pay" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=11;fontStyle=1;" value="✉️ Ожидать&#xa;подтверждение&#xa;оплаты" vertex="1">
+          <mxGeometry height="70" width="130" x="470" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="b_timer_pay" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=9;fontStyle=1;" value="⏱️&#xa;15m" vertex="1">
+          <mxGeometry height="28" width="28" x="520" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="throw_comp_timeout" parent="pool_orchestrator" style="ellipse;shape=doubleEllipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;strokeColor=#b85450;strokeWidth=2;fontSize=12;" value="⏪" vertex="1">
+          <mxGeometry height="30" width="30" x="519" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="end_timeout" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=4;fontSize=10;fontStyle=1;" value="Заказ отменен&#xa;по таймауту" vertex="1">
+          <mxGeometry height="40" width="40" x="514" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="task_capture" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;fontStyle=1;" value="⚙️ Списать&#xa;средства (Capture)" vertex="1">
+          <mxGeometry height="70" width="130" x="640" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="b_comp_capture" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;" value="⏪" vertex="1">
+          <mxGeometry height="25" width="25" x="690" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="task_comp_refund" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#f8cecc;strokeColor=#b85450;dashed=1;fontSize=10;" value="Полный возврат&#xa;средств (Refund)" vertex="1">
+          <mxGeometry height="50" width="120" x="645" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="task_pack" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;fontStyle=1;" value="⚙️ Передать наряд&#xa;на сборку (WMS)" vertex="1">
+          <mxGeometry height="70" width="130" x="810" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="b_error_stock" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" value="⚡" vertex="1">
+          <mxGeometry height="28" width="28" x="860" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="throw_comp_error" parent="pool_orchestrator" style="ellipse;shape=doubleEllipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;strokeColor=#b85450;strokeWidth=2;fontSize=12;" value="⏪" vertex="1">
+          <mxGeometry height="30" width="30" x="859" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="end_stock_error" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=4;fontSize=10;fontStyle=1;" value="Заказ отменен&#xa;(Нет остатков)" vertex="1">
+          <mxGeometry height="40" width="40" x="854" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="task_create_del" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;fontStyle=1;" value="⚙️ Создать наряд&#xa;на доставку" vertex="1">
+          <mxGeometry height="70" width="130" x="980" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="task_wait_del" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=11;fontStyle=1;" value="✉️ Ожидать&#xa;статус доставки" vertex="1">
+          <mxGeometry height="70" width="130" x="1150" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_status" parent="pool_orchestrator" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=10;fontStyle=1;" value="Статус&#xa;вручения?" vertex="1">
+          <mxGeometry height="50" width="50" x="1320" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="end_success" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=4;fontSize=10;fontStyle=1;" value="Заказ успешно&#xa;вручен" vertex="1">
+          <mxGeometry height="40" width="40" x="1440" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="task_crm" parent="pool_orchestrator" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;fontStyle=1;" value="👤 Ручной разбор&#xa;недозвона в CRM" vertex="1">
+          <mxGeometry height="60" width="140" x="1390" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="end_crm" parent="pool_orchestrator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=4;fontSize=10;fontStyle=1;" value="Инцидент&#xa;закрыт" vertex="1">
+          <mxGeometry height="40" width="40" x="1580" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_1" edge="1" parent="pool_orchestrator" source="start_order" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_reserve">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_2" edge="1" parent="pool_orchestrator" source="task_reserve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_init_pay">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_3" edge="1" parent="pool_orchestrator" source="task_init_pay" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_wait_pay">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_4" edge="1" parent="pool_orchestrator" source="task_wait_pay" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_capture">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_5" edge="1" parent="pool_orchestrator" source="task_capture" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_pack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_6" edge="1" parent="pool_orchestrator" source="task_pack" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_create_del">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_7" edge="1" parent="pool_orchestrator" source="task_create_del" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="task_wait_del">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_8" edge="1" parent="pool_orchestrator" source="task_wait_del" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="gw_status">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_deliv_ok" edge="1" parent="pool_orchestrator" source="gw_status" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=9;fontStyle=1;" target="end_success" value="DELIVERED">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_deliv_fail" edge="1" parent="pool_orchestrator" source="gw_status" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=9;fontStyle=1;" target="task_crm" value="FAILED">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1345" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flow_crm_end" edge="1" parent="pool_orchestrator" source="task_crm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" target="end_crm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_timeout" edge="1" parent="pool_orchestrator" source="b_timer_pay" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" target="throw_comp_timeout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_end_timeout" edge="1" parent="pool_orchestrator" source="throw_comp_timeout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" target="end_timeout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_stock_err" edge="1" parent="pool_orchestrator" source="b_error_stock" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" target="throw_comp_error">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_end_stock" edge="1" parent="pool_orchestrator" source="throw_comp_error" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" target="end_stock_error">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_comp_1" edge="1" parent="pool_orchestrator" source="b_comp_reserve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=2 2;strokeWidth=2;strokeColor=#6c8ebf;" target="task_comp_release">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_comp_2" edge="1" parent="pool_orchestrator" source="b_comp_capture" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=2 2;strokeWidth=2;strokeColor=#6c8ebf;" target="task_comp_refund">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mf_wms_1" edge="1" parent="1" source="task_reserve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeWidth=2;startArrow=oval;startFill=0;endArrow=open;endFill=0;fontSize=9;" target="pool_wms" value="POST /wms/reserve">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="235" y="130" />
+              <mxPoint x="280" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mf_pay_init" edge="1" parent="1" source="task_init_pay" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeWidth=2;startArrow=oval;startFill=0;endArrow=open;endFill=0;fontSize=9;" target="pool_payment" value="POST /payments/init">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="405" y="130" />
+              <mxPoint x="680" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mf_pay_webhook" edge="1" parent="1" source="pool_payment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeWidth=2;startArrow=oval;startFill=0;endArrow=open;endFill=0;fontSize=9;" target="task_wait_pay" value="Webhook (PAID)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="130" />
+              <mxPoint x="575" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mf_wms_pack" edge="1" parent="1" source="task_pack" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeWidth=2;startArrow=oval;startFill=0;endArrow=open;endFill=0;fontSize=9;" target="pool_wms" value="POST /wms/pack">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="915" y="140" />
+              <mxPoint x="460" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mf_del_create" edge="1" parent="1" source="task_create_del" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeWidth=2;startArrow=oval;startFill=0;endArrow=open;endFill=0;fontSize=9;" target="pool_delivery" value="POST /delivery/tasks">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1085" y="130" />
+              <mxPoint x="1200" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mf_del_status" edge="1" parent="1" source="pool_delivery" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeWidth=2;startArrow=oval;startFill=0;endArrow=open;endFill=0;fontSize=9;" target="task_wait_del" value="Webhook (DELIVERED / FAILED)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1380" y="130" />
+              <mxPoint x="1255" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
