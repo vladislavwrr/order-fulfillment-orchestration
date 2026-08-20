@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  title: Delivery Integration API
+  description: API взаимодействия с курьерской службой (наряды и вебхуки).
+  version: 1.0.0
+servers:
+  - url: https://delivery.company.com/api/v1
+
+paths:
+  /delivery/tasks:
+    post:
+      summary: Создание наряда на курьерскую доставку
+      operationId: createDeliveryTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeliveryTaskRequest'
+      responses:
+        '201':
+          description: Наряд на доставку успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDeliveryTaskResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+
+  /delivery/webhooks:
+    post:
+      summary: Прием событий изменения статуса доставки от курьеров
+      operationId: handleDeliveryWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryWebhookPayload'
+      responses:
+        '200':
+          description: Событие успешно принято в обработку
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  received:
+                    type: boolean
+                    example: true
+
+components:
+  schemas:
+    CreateDeliveryTaskRequest:
+      type: object
+      required:
+        - order_id
+        - recipient_name
+        - recipient_phone
+        - address
+        - time_slot
+      properties:
+        order_id:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+        recipient_name:
+          type: string
+          example: "Иван Иванов"
+        recipient_phone:
+          type: string
+          example: "+79991234567"
+        address:
+          type: string
+          example: "г. Москва, ул. Ленина, д. 10, кв. 25"
+        time_slot:
+          type: object
+          required: [start_time, end_time]
+          properties:
+            start_time:
+              type: string
+              format: date-time
+              example: "2026-08-21T14:00:00Z"
+            end_time:
+              type: string
+              format: date-time
+              example: "2026-08-21T18:00:00Z"
+
+    CreateDeliveryTaskResponse:
+      type: object
+      required: [task_id, status, tracking_url]
+      properties:
+        task_id:
+          type: string
+          example: "DELIV-TASK-5544"
+        status:
+          type: string
+          enum: [ASSIGNED]
+          example: "ASSIGNED"
+        tracking_url:
+          type: string
+          example: "https://track.delivery.com/DELIV-TASK-5544"
+
+    DeliveryWebhookPayload:
+      type: object
+      required:
+        - task_id
+        - order_id
+        - status
+        - timestamp
+      properties:
+        task_id:
+          type: string
+          example: "DELIV-TASK-5544"
+        order_id:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+        status:
+          type: string
+          enum: [IN_TRANSIT, DELIVERED, FAILED_NO_CONTACT]
+          example: "DELIVERED"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-08-21T16:45:00Z"
+        failure_reason:
+          type: string
+          nullable: true
+          example: null
+
+    ProblemDetails:
+      type: object
+      required: [type, title, status, detail]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+
+  responses:
+    400BadRequest:
+      description: Ошибка валидации структуры данных
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'

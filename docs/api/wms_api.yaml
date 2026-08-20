@@ -1,0 +1,153 @@
+openapi: 3.0.3
+info:
+  title: WMS Integration API
+  description: API складского учета для резервирования и снятия блокировок товаров.
+  version: 1.0.0
+servers:
+  - url: https://wms.company.com/api/v1
+
+paths:
+  /wms/reserve:
+    post:
+      summary: Временное резервирование товаров под заказ
+      operationId: reserveStock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReserveStockRequest'
+      responses:
+        '201':
+          description: Товары успешно зарезервированы
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReserveStockResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '422':
+          $ref: '#/components/responses/422StockShortage'
+
+  /wms/release:
+    post:
+      summary: Снятие брони с остатков (компенсирующая транзакция)
+      operationId: releaseStock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseStockRequest'
+      responses:
+        '200':
+          description: Бронь успешно снята
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseStockResponse'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+components:
+  schemas:
+    ReserveStockRequest:
+      type: object
+      required:
+        - order_id
+        - items
+      properties:
+        order_id:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+        items:
+          type: array
+          items:
+            type: object
+            required: [sku, quantity]
+            properties:
+              sku:
+                type: string
+                example: "SKU-99210"
+              quantity:
+                type: integer
+                minimum: 1
+                example: 2
+
+    ReserveStockResponse:
+      type: object
+      required:
+        - reservation_id
+        - status
+        - expires_at
+      properties:
+        reservation_id:
+          type: string
+          format: uuid
+          example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+        status:
+          type: string
+          enum: [RESERVED]
+          example: "RESERVED"
+        expires_at:
+          type: string
+          format: date-time
+          example: "2026-08-20T17:00:00Z"
+
+    ReleaseStockRequest:
+      type: object
+      required:
+        - reservation_id
+      properties:
+        reservation_id:
+          type: string
+          format: uuid
+          example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+
+    ReleaseStockResponse:
+      type: object
+      required: [status, released_at]
+      properties:
+        status:
+          type: string
+          enum: [RELEASED]
+          example: "RELEASED"
+        released_at:
+          type: string
+          format: date-time
+          example: "2026-08-20T17:05:00Z"
+
+    ProblemDetails:
+      type: object
+      required: [type, title, status, detail]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+
+  responses:
+    400BadRequest:
+      description: Некорректный синтаксис запроса
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    404NotFound:
+      description: Резерв не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    422StockShortage:
+      description: Бизнес-ошибка — нехватка остатков на складе
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
